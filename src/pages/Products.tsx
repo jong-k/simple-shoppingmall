@@ -1,24 +1,16 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
-
-const URL = "https://dummyjson.com/products";
+import { getProducts } from "../entities/product/api";
 
 export default function Products() {
   const [data, setData] = useState<any>(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
-      console.log("Fetching!");
       try {
-        const res = await axios.get(URL, {
-          params: {
-            limit: 20,
-          },
-        });
-        setData(res.data);
+        const result = await getProducts({ limit: 20 });
+        setData(result);
       } catch (err) {
-        const error = err as Error;
-        setData(error.message);
+        console.error("Failed to fetch products:", err);
       }
     };
 

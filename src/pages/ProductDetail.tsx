@@ -1,28 +1,25 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import NotFound from "./NotFound";
-
-const URL = "https://dummyjson.com/products";
+import { getProductById } from "../entities/product/api";
 
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
   const [data, setData] = useState<any>(null);
 
   useEffect(() => {
-    const url = `${URL}/${id || 1}`;
-    const fetchProduct = async () => {
-      console.log("Fetching!");
+    if (id == undefined || !/^\d+$/.test(id)) return;
+    const productId = parseInt(id);
+    const fetchProductById = async () => {
       try {
-        const res = await axios.get(url);
-        setData(res.data);
+        const result = await getProductById(productId);
+        setData(result);
       } catch (err) {
-        const error = err as Error;
-        setData(error.message);
+        console.error("Failed to fetch product:", err);
       }
     };
 
-    fetchProduct();
+    fetchProductById();
   }, [id]);
 
   if (id == undefined || !/^\d+$/.test(id)) {
