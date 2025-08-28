@@ -1,7 +1,14 @@
 import { useParams } from "react-router";
+import NotFound from "./NotFound";
 
 export default function ProductDetail() {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
 
-  return <div>Hello from products detail page! #{id}</div>;
+  if (id == undefined || !/^\d+$/.test(id)) {
+    return <NotFound />;
+  }
+
+  const productId = parseInt(id);
+
+  return <div>Hello from products detail page! #{productId}</div>;
 }
