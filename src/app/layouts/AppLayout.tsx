@@ -4,7 +4,7 @@ import { Container } from "../../shared/ui";
 
 export default function AppLayout() {
   return (
-    <div className="bg-background w-full">
+    <div className="min-h-dvh w-full bg-background">
       <Header />
       <Container>
         <Outlet />
