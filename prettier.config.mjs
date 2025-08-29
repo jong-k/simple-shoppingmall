@@ -18,7 +18,7 @@ const config = {
   importOrder: ["<THIRD_PARTY_MODULES>", "^@(.*)$", "^[.]/", "^[.]{2,}/"],
   importOrderSortSpecifiers: true,
   importOrderCaseInsensitive: true,
-  tailwindStylesheet: "./src/index.css",
+  tailwindStylesheet: "./src/app/styles/index.css",
 };
 
 export default config;
