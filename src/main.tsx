@@ -1,21 +1,22 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
-import "./index.css";
+import AppLayout from "./app/layouts/AppLayout.tsx";
+import "./app/styles/index.css";
 import NotFound from "./pages/NotFound.tsx";
 import ProductDetail from "./pages/ProductDetail.tsx";
 import Products from "./pages/Products.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <Routes>
-        <Route index element={<Navigate to="/products" replace />} />
-        <Route path="products">
-          <Route index element={<Products />} />
-          <Route path=":id" element={<ProductDetail />} />
+        <Route element={<AppLayout />}>
+          <Route index element={<Navigate to="/products" replace />} />
+          <Route path="products" element={<Products />} />
+          <Route path="products/:id" element={<ProductDetail />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
-        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>
