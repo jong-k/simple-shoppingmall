@@ -1,12 +1,12 @@
 import { Link } from "react-router";
-import { AppContainer } from "../../shared/ui";
+import { Container } from "../../shared/ui";
 
 export default function Header() {
   return (
     <header className="w-full bg-white">
-      <AppContainer>
+      <Container>
         <Link to="/">Simple Shoppingmall</Link>
-      </AppContainer>
+      </Container>
     </header>
   );
 }
