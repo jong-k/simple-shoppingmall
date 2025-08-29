@@ -11,9 +11,9 @@ export function AppRouter() {
       <Routes>
         <Route element={<AppLayout />}>
           <Route index element={<Navigate to={ROUTES.PRODUCTS} replace />} />
-          <Route path="products" element={<Products />} />
-          <Route path="products/:id" element={<ProductDetail />} />
-          <Route path="*" element={<NotFound />} />
+          <Route path={ROUTES.PRODUCTS.slice(1)} element={<Products />} />
+          <Route path={ROUTES.PRODUCT_DETAIL.slice(1)} element={<ProductDetail />} />
+          <Route path={ROUTES.NOT_FOUND} element={<NotFound />} />
         </Route>
       </Routes>
     </BrowserRouter>

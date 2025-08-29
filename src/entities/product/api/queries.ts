@@ -1,4 +1,4 @@
-import { ROUTES } from "../../../shared/config";
+import { API_ENDPOINT } from "../../../shared/config";
 import { axiosClient } from "../../../shared/lib/http";
 import type { Product, ProductsResponse } from "../model";
 
@@ -9,7 +9,7 @@ export const getProducts = async ({ limit = 20, skip = 0, signal }: GetProductsP
   if (limit !== undefined) params.limit = limit;
   if (skip !== undefined) params.skip = skip;
 
-  const { data } = await axiosClient.get<ProductsResponse>(ROUTES.PRODUCTS, {
+  const { data } = await axiosClient.get<ProductsResponse>(API_ENDPOINT.PRODUCTS, {
     params,
     signal,
   });
@@ -17,6 +17,6 @@ export const getProducts = async ({ limit = 20, skip = 0, signal }: GetProductsP
 };
 
 export const getProductById = async (id: number, signal?: AbortSignal) => {
-  const { data } = await axiosClient.get<Product>(`${ROUTES.PRODUCTS}/${id}`, { signal });
+  const { data } = await axiosClient.get<Product>(`${API_ENDPOINT.PRODUCTS}/${id}`, { signal });
   return data;
 };
