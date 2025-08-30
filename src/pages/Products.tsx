@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getProducts } from "../entities/product/api";
-import { ProductCard } from "../entities/product/ui";
+import { ProductsList } from "../widgets/products-list/ui";
 
 export default function Products() {
   const [data, setData] = useState<any>(null);
@@ -18,10 +18,5 @@ export default function Products() {
     fetchProducts();
   }, []);
 
-  return (
-    <div>
-      <h2>Hello from Products Page</h2>
-      <div>{data && data.products.map(p => <ProductCard key={p.id} product={p} />)}</div>
-    </div>
-  );
+  return <div>{data && <ProductsList products={data.products} />}</div>;
 }
