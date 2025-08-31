@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { twMerge } from "tailwind-merge";
 import NotFound from "./NotFound";
 import { getProductById } from "../entities/product/api";
 import { ProductDetails } from "../entities/product/ui";
 
-export default function ProductDetail() {
+interface ProductDetailProps {
+  className?: string;
+}
+
+export default function ProductDetail({ className }: ProductDetailProps) {
   const { id } = useParams<{ id: string }>();
   const [data, setData] = useState<any>(null);
 
@@ -27,11 +32,8 @@ export default function ProductDetail() {
     return <NotFound />;
   }
 
-  const productId = parseInt(id);
-
   return (
-    <div>
-      <h2>Hello from products detail page! #{productId}</h2>
+    <section className={twMerge("py-4", className)}>
       {data && <ProductDetails price={data.price} title={data.title} thumbnail={data.thumbnail} tags={data.tags} />}
       {/* {data && (
         <div className="flex gap-4">
@@ -44,6 +46,6 @@ export default function ProductDetail() {
           <div>{data.tags}</div>
         </div>
       )} */}
-    </div>
+    </section>
   );
 }
