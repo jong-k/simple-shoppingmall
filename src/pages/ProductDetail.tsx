@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import NotFound from "./NotFound";
 import { getProductById } from "../entities/product/api";
-import { ProductCard } from "../entities/product/ui";
+import { ProductDetails } from "../entities/product/ui";
 
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
@@ -32,7 +32,7 @@ export default function ProductDetail() {
   return (
     <div>
       <h2>Hello from products detail page! #{productId}</h2>
-      {data && <ProductCard product={data} />}
+      {data && <ProductDetails price={data.price} title={data.title} thumbnail={data.thumbnail} tags={data.tags} />}
       {/* {data && (
         <div className="flex gap-4">
           <div>{data.id}</div>
