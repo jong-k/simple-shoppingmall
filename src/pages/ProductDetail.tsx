@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { twMerge } from "tailwind-merge";
 import NotFound from "./NotFound";
-import { getProductById } from "../entities/product/api";
+import { useProductByIdQuery } from "../entities/product/model";
 import { ProductDetails } from "../entities/product/ui";
 
 interface ProductDetailProps {
@@ -10,27 +9,16 @@ interface ProductDetailProps {
 }
 
 export default function ProductDetail({ className }: ProductDetailProps) {
-  const { id } = useParams<{ id: string }>();
-  const [data, setData] = useState<any>(null);
-
-  useEffect(() => {
-    if (id == undefined || !/^\d+$/.test(id)) return;
-    const productId = parseInt(id);
-    const fetchProductById = async () => {
-      try {
-        const result = await getProductById(productId);
-        setData(result);
-      } catch (err) {
-        console.error("Failed to fetch product:", err);
-      }
-    };
-
-    fetchProductById();
-  }, [id]);
+  const { id } = useParams();
+  const productId = Number(id);
+  const { data, isLoading, isError } = useProductByIdQuery(productId);
 
   if (id == undefined || !/^\d+$/.test(id)) {
     return <NotFound />;
   }
+
+  if (isLoading) return <div>Loading product...</div>;
+  if (isError) return <div>Failed to load product.</div>;
 
   return (
     <section className={twMerge("py-4", className)}>
