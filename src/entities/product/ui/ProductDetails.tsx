@@ -6,11 +6,11 @@ type ProductDetailsProps = Omit<Product, "id">;
 
 export function ProductDetails({ title, price, tags, thumbnail }: ProductDetailsProps) {
   return (
-    <Card className="flex items-center gap-4">
+    <Card className="flex min-w-[250px] flex-wrap items-center gap-4">
       <ProductThumbnail src={thumbnail} alt={title} className="w-48" />
 
-      <div className="min-w-0 flex-1">
-        <div className="flex gap-2">
+      <div className="flex-1">
+        <div className="mb-2 flex flex-wrap gap-2">
           {tags.map(tag => (
             <Badge key={tag} title={tag} />
           ))}
