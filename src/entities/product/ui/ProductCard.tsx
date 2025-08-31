@@ -8,7 +8,7 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   return (
-    <Card className="flex items-center gap-4">
+    <Card className="flex min-w-[150px] items-center gap-4">
       <ProductThumbnail src={product.thumbnail} alt={product.title} className="w-24 md:w-28" />
 
       <div className="min-w-0 flex-1">
