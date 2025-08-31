@@ -5,7 +5,7 @@ import Products from "../../pages/Products";
 import { ROUTES } from "../../shared/config";
 import AppLayout from "../layouts/AppLayout";
 
-export function AppRouter() {
+export default function AppRouter() {
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
       <Routes>
