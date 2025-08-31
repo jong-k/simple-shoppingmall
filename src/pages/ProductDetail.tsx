@@ -35,17 +35,6 @@ export default function ProductDetail({ className }: ProductDetailProps) {
   return (
     <section className={twMerge("py-4", className)}>
       {data && <ProductDetails price={data.price} title={data.title} thumbnail={data.thumbnail} tags={data.tags} />}
-      {/* {data && (
-        <div className="flex gap-4">
-          <div>{data.id}</div>
-          <div>
-            <img src={data.thumbnail} />
-          </div>
-          <div>{data.title}</div>
-          <div>{data.price}</div>
-          <div>{data.tags}</div>
-        </div>
-      )} */}
     </section>
   );
 }
