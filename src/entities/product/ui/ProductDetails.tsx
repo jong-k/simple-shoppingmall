@@ -1,12 +1,15 @@
+import { twMerge } from "tailwind-merge";
 import { ProductThumbnail } from "./ProductThumbnail";
 import { Badge, Card } from "../../../shared/ui";
 import type { Product } from "../model";
 
-type ProductDetailsProps = Omit<Product, "id">;
+interface ProductDetailsProps extends Omit<Product, "id"> {
+  className?: string;
+}
 
-export function ProductDetails({ title, price, tags, thumbnail }: ProductDetailsProps) {
+export function ProductDetails({ title, price, tags, thumbnail, className }: ProductDetailsProps) {
   return (
-    <Card className="flex min-w-[250px] flex-wrap items-center gap-4">
+    <Card className={twMerge("flex min-w-[250px] flex-wrap items-center gap-4", className)}>
       <ProductThumbnail src={thumbnail} alt={title} className="w-48" />
 
       <div className="flex-1">

@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 import { ProductThumbnail } from "./ProductThumbnail";
+import { ROUTES } from "../../../shared/config";
 import { Card } from "../../../shared/ui";
 import type { Product } from "../model";
 
@@ -9,7 +10,7 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   return (
-    <Link to={`/products/${product.id}`}>
+    <Link to={`${ROUTES.PRODUCTS}/${product.id}`}>
       <Card className="flex min-w-[150px] items-center gap-4 transition-shadow hover:shadow-md">
         <ProductThumbnail src={product.thumbnail} alt={product.title} className="w-24 md:w-28" />
 
