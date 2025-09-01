@@ -1,4 +1,4 @@
-import { queryOptions, useQuery } from "@tanstack/react-query";
+import { infiniteQueryOptions, queryOptions, useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { getProductById, getProducts } from "../../product/api";
 
 export const productsQueryKeys = {
@@ -14,6 +14,20 @@ export const productsQueryOptions = (params: { limit?: number; skip?: number } =
 
 export const useProductsQuery = (params: { limit?: number; skip?: number } = {}) =>
   useQuery(productsQueryOptions(params));
+
+export const infiniteProductQueryOptions = (params: { limit?: number } = {}) =>
+  infiniteQueryOptions({
+    queryKey: productsQueryKeys.list(params),
+    queryFn: ({ pageParam = 0, signal }) => getProducts({ limit: params.limit, skip: pageParam, signal }),
+    getNextPageParam: lastPage => {
+      const nextSkip = lastPage.skip + lastPage.limit;
+      return nextSkip < lastPage.total ? nextSkip : undefined;
+    },
+    initialPageParam: 0,
+  });
+
+export const useInfiniteProductsQuery = (params: { limit?: number } = {}) =>
+  useInfiniteQuery(infiniteProductQueryOptions(params));
 
 export const productByIdQueryOptions = (id: number) =>
   queryOptions({
