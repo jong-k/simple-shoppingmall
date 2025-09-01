@@ -9,14 +9,12 @@ interface ProductsListProps {
 
 export function ProductsList({ products, className }: ProductsListProps) {
   return (
-    <section className={twMerge("py-4", className)}>
-      <ul className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        {products.map(p => (
-          <li key={p.id}>
-            <ProductCard product={p} />
-          </li>
-        ))}
-      </ul>
-    </section>
+    <ul className={twMerge("grid grid-cols-1 gap-4 md:grid-cols-2", className)}>
+      {products.map(p => (
+        <li key={p.id}>
+          <ProductCard product={p} />
+        </li>
+      ))}
+    </ul>
   );
 }

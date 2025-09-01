@@ -13,5 +13,5 @@ export function InfiniteProductsList({ limit, className }: InfiniteProductsListP
   if (isLoading) return <div>Loading products...</div>;
   if (isError) return <div>Failed to load products.</div>;
 
-  return <div className={twMerge(className)}>{data && <ProductsList products={data?.products} />}</div>;
+  return <section className={twMerge("py-4", className)}>{data && <ProductsList products={data?.products} />}</section>;
 }
