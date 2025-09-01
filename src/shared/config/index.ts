@@ -10,3 +10,5 @@ export const ROUTES = {
   PRODUCT_DETAIL: "/products/:id",
   NOT_FOUND: "*",
 } as const;
+
+export const API_GET_LIMIT = 20;
