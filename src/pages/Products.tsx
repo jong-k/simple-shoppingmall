@@ -1,5 +1,5 @@
-import { ProductsList } from "../widgets/products-list/ui";
+import { InfiniteProductsList } from "../widgets/products-list/ui/InfiniteProductsList";
 
 export default function Products() {
-  return <ProductsList />;
+  return <InfiniteProductsList limit={20} />;
 }
