@@ -22,7 +22,13 @@ export function InfiniteProductsList({ className }: InfiniteProductsListProps) {
     if (inView && hasNextPage && !isLoading) fetchNextPage();
   }, [inView, hasNextPage, isLoading, fetchNextPage]);
 
-  if (isLoading) return <Spinner />;
+  if (isLoading)
+    return (
+      <div className={twMerge("flex min-h-dvh items-center justify-center", className)}>
+        <Spinner />
+      </div>
+    );
+
   if (isError) return <div>Failed to load products.</div>;
 
   return (
