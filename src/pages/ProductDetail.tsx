@@ -2,6 +2,7 @@ import { useParams } from "react-router";
 import NotFound from "./NotFound";
 import { useProductByIdQuery } from "../entities/product/model";
 import { ProductDetails } from "../entities/product/ui";
+import { Spinner } from "../shared/ui";
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -12,7 +13,7 @@ export default function ProductDetail() {
     return <NotFound />;
   }
 
-  if (isLoading) return <div>Loading product...</div>;
+  if (isLoading) return <Spinner />;
   if (isError) return <div>Failed to load product.</div>;
 
   return (
