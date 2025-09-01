@@ -25,7 +25,9 @@ export function InfiniteProductsList({ className }: InfiniteProductsListProps) {
   return (
     <section className={twMerge("py-4", className)}>
       <ProductsList products={products} />
-      <div ref={ref} className=""></div>
+      <div ref={ref} className="pt-8 pb-4 text-center">
+        {!hasNextPage && <span>더 이상 상품이 존재하지 않습니다</span>}
+      </div>
     </section>
   );
 }
