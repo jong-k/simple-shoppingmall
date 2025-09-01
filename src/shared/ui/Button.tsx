@@ -2,7 +2,7 @@ import { twMerge } from "tailwind-merge";
 
 interface ButtonProps {
   text: string;
-  onClick?: () => void;
+  onClick?: (event: React.PointerEvent<HTMLButtonElement>) => void;
   className?: string;
 }
 
