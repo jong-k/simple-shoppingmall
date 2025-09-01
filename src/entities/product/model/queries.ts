@@ -12,9 +12,8 @@ export const productsQueryOptions = (params: { limit?: number; skip?: number } =
     queryFn: ({ signal }) => getProducts({ ...params, signal }),
   });
 
-export function useProductsQuery(params: { limit?: number; skip?: number } = {}) {
-  return useQuery(productsQueryOptions(params));
-}
+export const useProductsQuery = (params: { limit?: number; skip?: number } = {}) =>
+  useQuery(productsQueryOptions(params));
 
 export const productByIdQueryOptions = (id: number) =>
   queryOptions({
@@ -23,6 +22,4 @@ export const productByIdQueryOptions = (id: number) =>
     enabled: Number.isFinite(id),
   });
 
-export function useProductByIdQuery(id: number) {
-  return useQuery(productByIdQueryOptions(id));
-}
+export const useProductByIdQuery = (id: number) => useQuery(productByIdQueryOptions(id));
