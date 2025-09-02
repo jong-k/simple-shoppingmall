@@ -12,3 +12,10 @@ export const ROUTES = {
 } as const;
 
 export const API_GET_LIMIT = 20;
+
+export const TEST_ID = {
+  PRODUCT_CARD: "product-card",
+  PRODUCT_DETAIL: "product-detail",
+  PRODUCT_TITLE: "product-title",
+  PRODUCT_PRICE: "product-price",
+};
