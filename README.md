@@ -18,7 +18,7 @@
 
 ### 프로젝트 구조(FSD 패턴)
 
-FSD(Feature-sliced design) 패턴을 적용하여 유지보수성과 확장성을 향상시켰습니다
+FSD(Feature-sliced design) 패턴을 적용하여 유지보수성과 확장성을 향상
 
 - `src/main.tsx`: 진입점
 - `src/app/`: 레이아웃, 라우터, 전역 스타일, 프로바이더(QueryClient)
@@ -73,7 +73,7 @@ FSD(Feature-sliced design) 패턴을 적용하여 유지보수성과 확장성�
   - `React.memo()` 활용하여 props 변경 없는 경우 리렌더링을 방지
 - 초기값을 캐싱에서 빠르게 가져오기
   - `QueryClient.getQueriesData()`를 사용하여 상품 리스트 데이터에서 id에 해당하는 값 가져와 초기값으로 활용
-  - 이후 백그라운드에서 페칭하여 최신값 보여줌
+  - 이후 백그라운드에서 페칭하여 최신값 렌더링
 
 ### 성능 및 최적화
 
@@ -130,7 +130,8 @@ https://d1th7w7l95v1jv.cloudfront.net
 
 ## (기타) E2E 테스트(Playwright)
 
-- 개요: Playwright 기반 E2E 테스트가 `tests/e2e/*.spec.ts`에 구성되어 있습니다. 브라우저는 Chromium/Firefox/WebKit 3종으로 실행됩니다.
+- Playwright 기반 E2E 테스트를 `tests/e2e/*.spec.ts`에 구성
+- Chromium, Firefox, WebKit 3종의 브라우저에서 테스트 실행
 
 ### 설치/준비
 
