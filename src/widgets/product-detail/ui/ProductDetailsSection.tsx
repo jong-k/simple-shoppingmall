@@ -1,6 +1,7 @@
 import { twMerge } from "tailwind-merge";
 import { useProductByIdQuery } from "../../../entities/product/model";
 import { ProductDetails } from "../../../entities/product/ui";
+import { TEST_ID } from "../../../shared/config";
 import { Spinner } from "../../../shared/ui";
 
 interface ProductDetailsSectionProps {
@@ -19,7 +20,7 @@ export function ProductDetailsSection({ productId, className }: ProductDetailsSe
     );
 
   return (
-    <section className={twMerge("py-4", className)}>
+    <section data-testid={TEST_ID.PRODUCT_DETAIL} className={twMerge("py-4", className)}>
       {data && <ProductDetails price={data.price} title={data.title} thumbnail={data.thumbnail} tags={data.tags} />}
     </section>
   );

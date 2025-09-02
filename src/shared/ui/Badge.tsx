@@ -1,13 +1,17 @@
+import type { ComponentProps } from "react";
 import { twMerge } from "tailwind-merge";
 
-interface BadgeProps {
+type BadgeProps = ComponentProps<"div"> & {
   title: string;
   className?: string;
-}
+};
 
-export function Badge({ title, className }: BadgeProps) {
+export function Badge({ title, className, ...rest }: BadgeProps) {
   return (
-    <div className={twMerge("w-fit rounded-lg bg-slate-400 px-2 py-0.5 text-sm font-light text-white", className)}>
+    <div
+      {...rest}
+      className={twMerge("w-fit rounded-lg bg-slate-400 px-2 py-0.5 text-sm font-light text-white", className)}
+    >
       {title}
     </div>
   );
