@@ -29,7 +29,12 @@ export function InfiniteProductsList({ className }: InfiniteProductsListProps) {
       </div>
     );
 
-  if (isError) return <div>Failed to load products.</div>;
+  if (isError)
+    return (
+      <div className={twMerge("flex min-h-dvh items-center justify-center", className)}>
+        일시적인 에러가 발생했습니다
+      </div>
+    );
 
   return (
     <section className={twMerge("py-4", className)}>
