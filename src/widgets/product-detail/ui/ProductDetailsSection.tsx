@@ -11,14 +11,12 @@ interface ProductDetailsSectionProps {
 export function ProductDetailsSection({ productId, className }: ProductDetailsSectionProps) {
   const { data, isLoading, isError } = useProductByIdQuery(productId);
 
-  if (isLoading)
+  if (isLoading || isError)
     return (
       <div className={twMerge("flex min-h-screen items-center justify-center", className)}>
-        <Spinner />
+        {isLoading ? <Spinner /> : "일시적인 에러가 발생했습니다"}
       </div>
     );
-
-  if (isError) return <div>Failed to load product.</div>;
 
   return (
     <section className={twMerge("py-4", className)}>

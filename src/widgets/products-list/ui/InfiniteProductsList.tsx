@@ -22,14 +22,12 @@ export function InfiniteProductsList({ className }: InfiniteProductsListProps) {
     if (inView && hasNextPage && !isLoading) fetchNextPage();
   }, [inView, hasNextPage, isLoading, fetchNextPage]);
 
-  if (isLoading)
+  if (isLoading || isError)
     return (
-      <div className={twMerge("flex min-h-dvh items-center justify-center", className)}>
-        <Spinner />
+      <div className={twMerge("flex min-h-screen items-center justify-center", className)}>
+        {isLoading ? <Spinner /> : "일시적인 에러가 발생했습니다"}
       </div>
     );
-
-  if (isError) return <div>Failed to load products.</div>;
 
   return (
     <section className={twMerge("py-4", className)}>
