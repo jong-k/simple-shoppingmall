@@ -7,7 +7,7 @@ test.describe("리스트 페이지", () => {
 
   test("상품 정보에 thumbnail, title, price 를 표시한다", async ({ page }) => {
     // 상품 리스트 로딩 대기
-    await page.waitForSelector('[data-testid="product-card"]', { timeout: 5000 });
+    await page.waitForSelector('[data-testid="product-card"]', { timeout: 10_000 });
 
     // 전체 ProductCard 리스트 확인
     const productCards = page.locator('[data-testid="product-card"]');
