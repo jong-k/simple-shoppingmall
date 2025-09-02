@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Link } from "react-router";
 import { ProductThumbnail } from "./ProductThumbnail";
 import { ROUTES } from "../../../shared/config";
@@ -9,7 +10,7 @@ interface ProductCardProps {
   product: Product;
 }
 
-export function ProductCard({ product }: ProductCardProps) {
+export const ProductCard = memo(function ProductCardComponent({ product }: ProductCardProps) {
   return (
     <Link data-testid={TEST_ID.PRODUCT_CARD} to={`${ROUTES.PRODUCTS}/${product.id}`}>
       <Card className="flex min-w-[150px] items-center gap-4 transition-shadow hover:shadow-md">
@@ -29,4 +30,4 @@ export function ProductCard({ product }: ProductCardProps) {
       </Card>
     </Link>
   );
-}
+});
