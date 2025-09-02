@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { twMerge } from "tailwind-merge";
 import { ProductThumbnail } from "./ProductThumbnail";
 import { TEST_ID } from "../../../shared/config";
@@ -8,7 +9,13 @@ interface ProductDetailsProps extends Omit<Product, "id"> {
   className?: string;
 }
 
-export function ProductDetails({ title, price, tags, thumbnail, className }: ProductDetailsProps) {
+export const ProductDetails = memo(function ProductDetailsComponent({
+  title,
+  price,
+  tags,
+  thumbnail,
+  className,
+}: ProductDetailsProps) {
   return (
     <Card className={twMerge("flex min-w-[250px] flex-wrap items-center gap-4", className)}>
       <ProductThumbnail src={thumbnail} alt={title} className="w-48" />
@@ -28,4 +35,4 @@ export function ProductDetails({ title, price, tags, thumbnail, className }: Pro
       </div>
     </Card>
   );
-}
+});
