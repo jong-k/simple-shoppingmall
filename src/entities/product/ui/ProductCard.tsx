@@ -11,7 +11,10 @@ interface ProductCardProps {
 export function ProductCard({ product }: ProductCardProps) {
   return (
     <Link to={`${ROUTES.PRODUCTS}/${product.id}`}>
-      <Card className="flex min-w-[150px] items-center gap-4 transition-shadow hover:shadow-md">
+      <Card
+        data-testid="product-card"
+        className="flex min-w-[150px] items-center gap-4 transition-shadow hover:shadow-md"
+      >
         <ProductThumbnail src={product.thumbnail} alt={product.title} className="w-24 md:w-28" />
 
         <div className="min-w-0 flex-1">
