@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useInView } from "react-intersection-observer";
 import { twMerge } from "tailwind-merge";
 import { ProductsList } from "./ProductsList";
@@ -16,7 +16,7 @@ export function InfiniteProductsList({ className }: InfiniteProductsListProps) {
   });
   const { ref, inView } = useInView({ threshold: 0, rootMargin: "200px 0px" });
 
-  const products = data?.pages.flatMap(p => p.products) || [];
+  const products = useMemo(() => data?.pages.flatMap(p => p.products) || [], [data]);
 
   useEffect(() => {
     if (inView && hasNextPage && !isLoading) fetchNextPage();
