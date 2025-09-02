@@ -1,4 +1,6 @@
-import { infiniteQueryOptions, queryOptions, useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { infiniteQueryOptions, queryOptions, useInfiniteQuery, useQuery, useQueryClient } from "@tanstack/react-query";
+import type { InfiniteData } from "@tanstack/react-query";
+import type { Product, ProductsResponse } from "./types";
 import { getProductById, getProducts } from "../../product/api";
 
 export const productsQueryKeys = {
@@ -20,11 +22,27 @@ export const infiniteProductQueryOptions = (params: { limit?: number } = {}) =>
 export const useInfiniteProductsQuery = (params: { limit?: number } = {}) =>
   useInfiniteQuery(infiniteProductQueryOptions(params));
 
-export const productByIdQueryOptions = (id: number) =>
+export const productByIdQueryOptions = (id: number, opts?: { initialData?: () => Product | undefined }) =>
   queryOptions({
     queryKey: productsQueryKeys.detail(id),
     queryFn: ({ signal }) => getProductById(id, signal),
     enabled: Number.isFinite(id),
+    initialData: opts?.initialData,
   });
 
-export const useProductByIdQuery = (id: number) => useQuery(productByIdQueryOptions(id));
+export const useProductByIdQuery = (id: number) => {
+  const queryClient = useQueryClient();
+
+  const getInitialFromList = () => {
+    const entries = queryClient.getQueriesData<InfiniteData<ProductsResponse>>({
+      queryKey: productsQueryKeys.list(),
+    });
+    for (const [, data] of entries) {
+      const found = data?.pages.flatMap(p => p.products).find(p => p.id === id);
+      if (found) return found;
+    }
+    return undefined;
+  };
+
+  return useQuery(productByIdQueryOptions(id, { initialData: getInitialFromList }));
+};

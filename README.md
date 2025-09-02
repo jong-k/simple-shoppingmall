@@ -13,91 +13,90 @@
 - 서버 상태 관리: TanStack Query(react-query v5)
 - 스타일링: Tailwind CSS v4
 - 기타 도구: ESLint, Prettier
-- 정적 웹 호스팅: AWS S3 + CloudFront(호스팅), Github Actions(CI/CD)
+- 정적 웹 호스팅: AWS S3 + CloudFront, Github Actions(CI/CD)
 - 테스팅: Playwright(E2E)
 
 ### 프로젝트 구조(FSD 패턴)
 
-- 진입점: `src/main.tsx`
+FSD(Feature-sliced design) 패턴을 적용하여 유지보수성과 확장성을 향상
+
+- `src/main.tsx`: 진입점
 - `src/app/`: 레이아웃, 라우터, 전역 스타일, 프로바이더(QueryClient)
-- `src/pages/`: 라우트 단위 페이지(/products, /products/:id)
-- `src/entities/product/{api,model,ui}`: 도메인 엔티티(타입/쿼리/뷰)
+- `src/pages/`: 라우트 단위 페이지 컴포넌트
 - `src/widgets/`: 페이지를 구성하는 상위 UI 블록(여러 기능 및 엔티티 조합)
-- `src/shared/{ui,lib,config}`: 공용 UI/라이브러리/상수
+- `src/entities/product/{api,model,ui}`: 도메인 엔티티(타입, 쿼리, 뷰)
+- `src/shared/{ui,lib,config}`: 공용 컴포넌트, 유틸리티, 상수
 - `tests/e2e`: E2E 테스트 코드
 
 ## 2) 개발내용
 
-### 요구사항 반영 요약
+### 요약
 
-- 리스트 페이지: thumbnail, title, price 표시, 20개씩 로드, 스크롤 기반 lazy load(무한 스크롤)
-- 상세 페이지: 리스트에서 상품 클릭 시 이동, thumbnail, title, price, tags 표시
-- 로딩 UX/UI: 데이터 로딩 중 스피너 UI 표시
-
-### 라우팅
-
-- 경로: `/products`(리스트), `/products/:id`(상세)
-- 구현: `src/app/router/index.tsx`
-  - 인덱스는 `/products`로 리다이렉트
-  - 잘못된 경로는 `NotFound` 처리
-
-### 데이터 계층(entities/product)
-
-- 타입: `model/types.ts`
-  - `Product`
-  - `ProductsResponse`
-- API: `api/queries.ts`
-  - Axios 클라이언트로 dummyjson 호출(AbortSignal 지원)
-- 쿼리 훅: `model/queries.ts`
-  - `useInfiniteProductsQuery({ limit })`: 무한 스크롤(페이지 파라미터 `skip` 계산)
-  - `useProductByIdQuery(id)`: 단건 상세 조회
-- 캐싱: TanStack Query 옵션 활용(`staleTime=30s`)
+- 리스트 페이지
+  - 각 상품 정보가 thumbnail, title, price 표시
+  - 상품 데이터를 20개씩 로드
+  - 스크롤 기반 lazy load(무한 스크롤)
+- 상세 페이지
+  - 리스트 페이지의 상품 항목 클릭 시 상세 페이지로 이동
+  - thumbnail, title, price, tags 표시
+- 공통
+  - 로딩 UI: 데이터 로딩 중 스피너 UI 표시
+  - 파일(번들) 크기 최소화, 캐싱 최적화
+  - 정적 페이지 배포
+- 기타
+  - E2E 테스트 추가
 
 ### 리스트 페이지 구현
 
+- 경로: `/products` (루트 경로(`/`)에서 리다이렉트)
 - 컴포넌트: `widgets/products-list/ui/InfiniteProductsList.tsx`
-  - `useInfiniteProductsQuery`로 `limit=20`씩 로드, `useInView` 활용하여 스크롤 감지하여 다음 페이지 자동 요청
-  - 초기/추가 로딩 상태에서 `Spinner` 노출, 에러 시 알림 메시지 노출
-  - 하단에 더 이상 데이터가 없을 때 안내 메시지 노출
+  - `useInfiniteProductsQuery`로 `limit=20`씩 로드, `useInView` 활용하여 스크롤 감지하여 다음 페이지
+    자동 요청
+  - 최초/추가 로딩 상태에 `Spinner` UI 노출, 에러 시 메시지 노출
+  - 더 이상 불러올 데이터가 없을 때 하단에 안내 메시지 노출
+  - 상품 리스트 데이터를 useMemo로 메모이제이션하여 리렌더링 유발을 방지
 - 카드 UI: `entities/product/ui/ProductCard.tsx`
-  - 썸네일, 제목, 가격 표시 및 카드 클릭 시 `/products/{id}`로 이동
+  - thumbnail, title, price 표시
+  - 카드 클릭 시 `/products/{id}`로 이동
   - 썸네일 이미지는 `loading="lazy"` 및 `decoding="async"` 적용하여 브라우저 수준 lazy loading 및 병렬적 DOM 렌더링
+  - 리렌더링 방지: React.memo() 활용하여 추가 데이터 로드 시 기존 카드 리렌더링 방지
 
 ### 상세 페이지 구현
 
-- 엔트리: `pages/ProductDetail.tsx`
-  - URL 파라미터 검증(숫자 외 `NotFound`)
-- 섹션: `widgets/product-detail/ui/ProductDetailsSection.tsx`
+- 경로: `/products/:id`
+  - URL 파라미터 검증하여 Not Found 처리(숫자 외 id 입력 시 `Page Not Found` 알림)
+- 컴포넌트: `widgets/product-detail/ui/ProductDetailsSection.tsx`
   - `useProductByIdQuery`로 상세 데이터 로드
-  - 로딩/에러 처리 시 `Spinner` 또는 메시지 표시
-  - `entities/product/ui/ProductDetails.tsx`로 썸네일/제목/가격/태그 출력
+  - 로딩 시 `Spinner` UI 노출, 에러 시 메시지 표시
+- 상세 UI: `entities/product/ui/ProductDetails.tsx`
+  - thumbnail, title, price, tags 표시
+  - `React.memo()` 활용하여 props 변경 없는 경우 리렌더링을 방지
+- 초기값을 캐싱에서 빠르게 가져오기
+  - `QueryClient.getQueriesData()`를 사용하여 상품 리스트 데이터에서 id에 해당하는 값 가져와 초기값으로 활용
+  - 이후 백그라운드에서 페칭하여 최신값 렌더링
 
 ### 성능 및 최적화
 
 - 네트워크/데이터
   - Axios 인스턴스: `src/shared/lib/http`
-    - BaseURL/타임아웃/JSON 헤더 공통화
-  - AbortSignal로 취소 가능(빠른 라우팅 전환 시 낭비 최소화)
-  - TanStack Query 캐시로 동일 데이터 재요청 최소화
-- 렌더링/이미지
-  - 이미지 `loading="lazy"`, 필요한 시점에만 로드
-  - 작은 컴포넌트로 분리해 재사용성/가독성 향상
+    - BaseURL, 타임아웃, JSON 헤더 공통화하여 코드 라인 감소
+  - TanStack Query 캐싱
+    - `stale time`을 30초 설정하여 동일 데이터 리페칭 최소화
+- Code splitting
+  - React `lazy()`, `Suspense` 활용
+  - 라우트 단위 lazy loading 적용: `src/app/router/index.tsx`
+  - Suspense 래핑 및 fallback UI 제공: `src/app/layouts/AppLayout`
 - 빌드/캐싱(Vite 기본 프로덕션 최적화)
-  - ESBuild 기반 압축/트리쉐이킹/코드 분할
+  - ESBuild 기반 번들링, Tree shaking
   - 콘텐츠 해시 파일명(`.hash.js`)으로 브라우저 장기 캐싱 및 캐시 무효화
-  - React SWC 플러그인으로 빠른 개발/빌드 사이클 유지
+  - React SWC 플러그인 적용하여 빠른 트랜스파일링
 
-### 접근성/품질
+### 접근성/코드품질
 
-- 스피너에 `role="status"`/`aria-label` 지정
+- `Spinner.tsx`에 `role="status"` 및 `aria-label` 지정하여 접근성 개선
 - ESLint/Prettier 구성으로 일관된 코드 스타일 유지
   - import 정렬 및 Tailwind 유틸 우선 스타일링
 - `tailwind-merge`로 tailwind class 충돌 해소
-
-### 엣지 케이스 처리
-
-- 잘못된 상품 ID: 숫자 검증 후 미일치 시 `NotFound`
-- API 오류: 리스트/상세 페이지에서 에러 안내 메시지 제공
 
 ## 3) 빌드 및 실행방법
 
@@ -117,23 +116,26 @@
 
 ### 프로덕션 빌드
 
-- 빌드: `pnpm build` (TypeScript 빌드 + Vite 번들)
+- 빌드: `pnpm build`
 - 미리보기: `pnpm preview`
-- 산출물: `dist/` (압축/코드분할/해시 파일명으로 캐싱 최적화)
+- 산출물: `dist/`
 
 ## 4) 정적 페이지 배포
+
 - AWS S3 + CloudFront 활용
+- GitHub Actions 활용하여 CI/CD 설정
+  - `./github/workflows/deploy.yml`
 
 https://d1th7w7l95v1jv.cloudfront.net
 
 ## (기타) E2E 테스트(Playwright)
 
-- 개요: Playwright 기반 E2E 테스트가 `tests/e2e/*.spec.ts`에 구성되어 있습니다. 브라우저는 Chromium/Firefox/WebKit 3종으로 실행됩니다.
+- Playwright 기반 E2E 테스트를 `tests/e2e/*.spec.ts`에 구성
+- Chromium, Firefox, WebKit 3종의 브라우저에서 테스트 실행
 
 ### 설치/준비
 
-- 브라우저 설치: `pnpm exec playwright install` (최초 1회)
-- 환경: `Node >=22.17.1 <23`와 pnpm 필요. 앱은 Vite dev 서버를 사용하며, Playwright가 자동으로 기동합니다.
+- Playwright 브라우저 설치: `pnpm exec playwright install` (최초 1회)
 
 ### 실행 명령어
 
@@ -142,11 +144,12 @@ https://d1th7w7l95v1jv.cloudfront.net
 - Headed 모드(브라우저 표시): `pnpm test:e2e:headed`
 - 특정 파일만 실행: `pnpm exec playwright test tests/e2e/products.spec.ts`
 
-### 작성된 시나리오
+### 테스트 시나리오
 
 - 리스트 페이지: `tests/e2e/products.spec.ts`
-  - 각 상품 정보에 `thumbnail/title/price` 표시 검증
-  - 카드 클릭 시 상세 페이지 이동(`/products/:id`)
-  - 스크롤 시 20개씩 추가 로드(무한 스크롤)
+  - 각 상품 정보가 thumbnail, title, price 표시
+  - 리스트 페이지의 상품 항목 클릭 시 상세 페이지로 이동
+  - 데이터를 20개씩 로드
+  - 스크롤 기반 lazy load(무한 스크롤)
 - 상세 페이지: `tests/e2e/product-detail.spec.ts`
-  - 상품 상세 정보에 `thumbnail/title/price/tags` 표시 검증
+  - thumbnail, title, price, tags 표시

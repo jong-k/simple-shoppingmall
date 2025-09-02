@@ -1,9 +1,11 @@
+import { lazy } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
-import NotFound from "../../pages/NotFound";
-import ProductDetail from "../../pages/ProductDetail";
-import Products from "../../pages/Products";
 import { ROUTES } from "../../shared/config";
 import AppLayout from "../layouts/AppLayout";
+
+const Products = lazy(() => import("../../pages/Products"));
+const ProductDetail = lazy(() => import("../../pages/ProductDetail"));
+const NotFound = lazy(() => import("../../pages/NotFound"));
 
 export default function AppRouter() {
   return (
