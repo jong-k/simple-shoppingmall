@@ -1,5 +1,7 @@
 # Simple Shoppingmall
 
+> 작성자: 김종한
+
 ## 1) 개발환경
 
 ### 기술 스택
@@ -10,22 +12,19 @@
 - 라우팅: React Router v7
 - 서버 상태 관리: TanStack Query(react-query v5)
 - 스타일링: Tailwind CSS v4
-- 기타 도구: ESLint + Prettier(정렬/정적 분석)
+- 기타 도구: ESLint, Prettier
+- 정적 웹 호스팅: AWS S3 + CloudFront(호스팅), Github Actions(CI/CD)
+- 테스팅: Playwright(E2E)
 
 ### 프로젝트 구조(FSD 패턴)
 
-- `src/app/`: 레이아웃, 라우터, 전역 스타일, 프로바이더
-- `src/pages/`: 라우트 엔트리 컴포넌트(Products, ProductDetail 등)
-- `src/entities/product/{api,model,ui}`: 도메인 엔티티(타입/쿼리/뷰)
-- `src/widgets/`: 페이지 섹션 단위 UI(예: 무한 상품 리스트, 상세 섹션)
-- `src/shared/{ui,lib,config}`: 공용 UI/라이브러리/설정
 - 진입점: `src/main.tsx`
-
-### API 설정
-
-- Base URL: `src/shared/config/index.ts` → `API_BASE_URL = https://dummyjson.com`
-- 엔드포인트: `API_ENDPOINT.PRODUCTS = /products`
-- 기본 페이지 크기: `API_GET_LIMIT = 20`
+- `src/app/`: 레이아웃, 라우터, 전역 스타일, 프로바이더(QueryClient)
+- `src/pages/`: 라우트 단위 페이지(/products, /products/:id)
+- `src/entities/product/{api,model,ui}`: 도메인 엔티티(타입/쿼리/뷰)
+- `src/widgets/`: 페이지를 구성하는 상위 UI 블록(여러 기능 및 엔티티 조합)
+- `src/shared/{ui,lib,config}`: 공용 UI/라이브러리/상수
+- `tests/e2e`: E2E 테스트 코드
 
 ## 2) 개발내용
 
@@ -44,8 +43,11 @@
 
 ### 데이터 계층(entities/product)
 
-- 타입: `model/types.ts` → `Product`, `ProductsResponse`
-- API: `api/queries.ts` → Axios 클라이언트로 dummyjson 호출(AbortSignal 지원)
+- 타입: `model/types.ts`
+  - `Product`
+  - `ProductsResponse`
+- API: `api/queries.ts`
+  - Axios 클라이언트로 dummyjson 호출(AbortSignal 지원)
 - 쿼리 훅: `model/queries.ts`
   - `useInfiniteProductsQuery({ limit })`: 무한 스크롤(페이지 파라미터 `skip` 계산)
   - `useProductByIdQuery(id)`: 단건 상세 조회
@@ -63,7 +65,8 @@
 
 ### 상세 페이지 구현
 
-- 엔트리: `pages/ProductDetail.tsx` → URL 파라미터 검증(숫자 외 `NotFound`)
+- 엔트리: `pages/ProductDetail.tsx`
+  - URL 파라미터 검증(숫자 외 `NotFound`)
 - 섹션: `widgets/product-detail/ui/ProductDetailsSection.tsx`
   - `useProductByIdQuery`로 상세 데이터 로드
   - 로딩/에러 처리 시 `Spinner` 또는 메시지 표시
@@ -72,7 +75,8 @@
 ### 성능 및 최적화
 
 - 네트워크/데이터
-  - Axios 인스턴스: `src/shared/lib/http`, BaseURL/타임아웃/JSON 헤더 공통화
+  - Axios 인스턴스: `src/shared/lib/http`
+    - BaseURL/타임아웃/JSON 헤더 공통화
   - AbortSignal로 취소 가능(빠른 라우팅 전환 시 낭비 최소화)
   - TanStack Query 캐시로 동일 데이터 재요청 최소화
 - 렌더링/이미지
@@ -87,12 +91,13 @@
 
 - 스피너에 `role="status"`/`aria-label` 지정
 - ESLint/Prettier 구성으로 일관된 코드 스타일 유지
-- import 정렬 및 Tailwind 유틸 우선 스타일링, `tailwind-merge`로 충돌 해소
+  - import 정렬 및 Tailwind 유틸 우선 스타일링
+- `tailwind-merge`로 tailwind class 충돌 해소
 
-### 에지 케이스 처리
+### 엣지 케이스 처리
 
 - 잘못된 상품 ID: 숫자 검증 후 미일치 시 `NotFound`
-- API 오류: 리스트/상세 모두 에러 안내 메시지 제공
+- API 오류: 리스트/상세 페이지에서 에러 안내 메시지 제공
 
 ## 3) 빌드 및 실행방법
 
@@ -116,10 +121,32 @@
 - 미리보기: `pnpm preview`
 - 산출물: `dist/` (압축/코드분할/해시 파일명으로 캐싱 최적화)
 
-## 평가 항목 대응
+## 4) 정적 페이지 배포
+- AWS S3 + CloudFront 활용
 
-- 프로젝트 구성: FSD 레이어(app/pages/entities/widgets/shared)로 모듈화, 타입/쿼리/UI 분리
-- 요구사항 이해: 리스트(20개씩, thumbnail/title/price, 무한 스크롤)와 상세(thumbnail/title/price/tags, 클릭 이동) 구현
-- 기능 구현 정확도: 라우팅/파라미터 검증/로딩 스피너/에러 처리/이미지 지연 로딩 반영
-- 코드 구조 및 명료성: domain-first로 책임 분리, 재사용 가능한 UI 컴포넌트(Card/Badge/Spinner 등) 구성
-- 기술 선택 및 설명 문서: React + Vite + TanStack Query + Tailwind 선택 이유와 설정을 본 문서에 기술, Vite 빌드 최적화로 파일 크기/캐싱 대응
+https://d1th7w7l95v1jv.cloudfront.net
+
+## (기타) E2E 테스트(Playwright)
+
+- 개요: Playwright 기반 E2E 테스트가 `tests/e2e/*.spec.ts`에 구성되어 있습니다. 브라우저는 Chromium/Firefox/WebKit 3종으로 실행됩니다.
+
+### 설치/준비
+
+- 브라우저 설치: `pnpm exec playwright install` (최초 1회)
+- 환경: `Node >=22.17.1 <23`와 pnpm 필요. 앱은 Vite dev 서버를 사용하며, Playwright가 자동으로 기동합니다.
+
+### 실행 명령어
+
+- 전체 테스트: `pnpm test:e2e`
+- UI 모드(선택 실행/디버깅): `pnpm test:e2e:ui`
+- Headed 모드(브라우저 표시): `pnpm test:e2e:headed`
+- 특정 파일만 실행: `pnpm exec playwright test tests/e2e/products.spec.ts`
+
+### 작성된 시나리오
+
+- 리스트 페이지: `tests/e2e/products.spec.ts`
+  - 각 상품 정보에 `thumbnail/title/price` 표시 검증
+  - 카드 클릭 시 상세 페이지 이동(`/products/:id`)
+  - 스크롤 시 20개씩 추가 로드(무한 스크롤)
+- 상세 페이지: `tests/e2e/product-detail.spec.ts`
+  - 상품 상세 정보에 `thumbnail/title/price/tags` 표시 검증
