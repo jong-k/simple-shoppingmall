@@ -6,15 +6,6 @@ export const productsQueryKeys = {
   detail: (id: number) => ["products", "detail", id] as const,
 };
 
-export const productsQueryOptions = (params: { limit?: number; skip?: number } = {}) =>
-  queryOptions({
-    queryKey: productsQueryKeys.list(params),
-    queryFn: ({ signal }) => getProducts({ ...params, signal }),
-  });
-
-export const useProductsQuery = (params: { limit?: number; skip?: number } = {}) =>
-  useQuery(productsQueryOptions(params));
-
 export const infiniteProductQueryOptions = (params: { limit?: number } = {}) =>
   infiniteQueryOptions({
     queryKey: productsQueryKeys.list(params),
