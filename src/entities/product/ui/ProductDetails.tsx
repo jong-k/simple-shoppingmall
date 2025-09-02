@@ -16,7 +16,7 @@ export function ProductDetails({ title, price, tags, thumbnail, className }: Pro
       <div className="flex-1">
         <div className="mb-2 flex flex-wrap gap-2">
           {tags.map(tag => (
-            <Badge key={tag} title={tag} />
+            <Badge data-testid={TEST_ID.PRODUCT_TAG} key={tag} title={tag} />
           ))}
         </div>
         <h3 data-testid={TEST_ID.PRODUCT_TITLE} className="text-xl font-semibold md:text-2xl">

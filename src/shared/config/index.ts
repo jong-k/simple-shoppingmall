@@ -18,4 +18,5 @@ export const TEST_ID = {
   PRODUCT_DETAIL: "product-detail",
   PRODUCT_TITLE: "product-title",
   PRODUCT_PRICE: "product-price",
+  PRODUCT_TAG: "product-tag",
 };
