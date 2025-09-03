@@ -50,8 +50,7 @@ FSD(Feature-sliced design) 패턴을 적용하여 유지보수성과 확장성�
 
 - 경로: `/products` (루트 경로(`/`)에서 리다이렉트)
 - 컴포넌트: `widgets/products-list/ui/InfiniteProductsList.tsx`
-  - `useInfiniteProductsQuery`로 `limit=20`씩 로드, `useInView` 활용하여 스크롤 감지하여 다음 페이지
-    자동 요청
+  - `useInfiniteProductsQuery`로 `limit=20`씩 로드, `useInView` 활용하여 스크롤 감지하여 다음 페이지를 자동 요청
   - 최초/추가 로딩 상태에 `Spinner` UI 노출, 에러 시 메시지 노출
   - 더 이상 불러올 데이터가 없을 때 하단에 안내 메시지 노출
   - 상품 리스트 데이터를 useMemo로 메모이제이션하여 리렌더링 유발을 방지
@@ -125,7 +124,7 @@ FSD(Feature-sliced design) 패턴을 적용하여 유지보수성과 확장성�
 
 - AWS S3 + CloudFront 활용
 - GitHub Actions 활용하여 CI/CD 설정
-  - `./github/workflows/deploy.yml`
+  - `.github/workflows/deploy.yml`
 
 https://d1th7w7l95v1jv.cloudfront.net
 
