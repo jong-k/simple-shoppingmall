@@ -20,13 +20,67 @@
 
 FSD(Feature-sliced design) 패턴을 적용하여 유지보수성과 확장성을 향상
 
-- `src/main.tsx`: 진입점
-- `src/app/`: 레이아웃, 라우터, 전역 스타일, 프로바이더(QueryClient)
-- `src/pages/`: 라우트 단위 페이지 컴포넌트
-- `src/widgets/`: 페이지를 구성하는 상위 UI 블록(여러 기능 및 엔티티 조합)
-- `src/entities/product/{api,model,ui}`: 도메인 엔티티(타입, 쿼리, 뷰)
-- `src/shared/{ui,lib,config}`: 공용 컴포넌트, 유틸리티, 상수
-- `tests/e2e`: E2E 테스트 코드
+```
+src/
+├── main.tsx                            # SPA 진입점
+├── app/                                # 앱 계층 - 최상위 설정
+│   ├── layouts/
+│   │   ├── AppLayout.tsx                 # 메인 레이아웃
+│   │   └── Header.tsx                    # 헤더 컴포넌트
+│   ├── providers/
+│   │   ├── index.tsx                     # 전체 프로바이더 조립
+│   │   └── ReactQueryProvider.tsx        # TanStack Query provider
+│   ├── router/
+│   │   └── index.tsx                     # React Router 설정 및 라우트 정의
+│   └── styles/
+│       └── index.css                     # 전역 스타일 (Tailwind CSS)
+├── pages/                              # 페이지 계층 - 라우트 단위 페이지
+│   ├── Products.tsx                      # 상품 리스트 페이지 (/)
+│   ├── ProductDetail.tsx                 # 상품 상세 페이지 (/products/:id)
+│   └── NotFound.tsx                      # 404 에러 페이지
+├── widgets/                            # 위젯 계층 - 복합 UI 블록
+│   ├── products-list/
+│   │   └── ui/
+│   │       ├── index.ts                  # barrel export
+│   │       ├── ProductsList.tsx          # 기본 상품 리스트
+│   │       └── InfiniteProductsList.tsx  # 무한 스크롤 리스트
+│   └── product-detail/
+│       └── ui/
+│           ├── index.ts                  # barrel export
+│           └── ProductDetailsSection.tsx # 상품 상세 섹션
+├── entities/                         # 엔티티 계층 - 도메인 로직
+│   └── product/                        # 상품 엔티티
+│       ├── api/
+│       │   ├── index.ts                  # API barrel export
+│       │   └── queries.ts                # HTTP 요청 함수들
+│       ├── model/                      # 상품 엔티티 데이터 모델
+│       │   ├── index.ts                  # 모델 barrel export
+│       │   ├── types.ts                  # 상품 타입 정의
+│       │   └── queries.ts                # TanStack Query 훅
+│       └── ui/
+│           ├── index.ts                # 상품 엔티티 UI 
+│           ├── ProductCard.tsx           # 상품 카드 컴포넌트
+│           ├── ProductDetails.tsx        # 상품 상세 정보
+│           └── ProductThumbnail.tsx      # 상품 썸네일
+└── shared/                           # 공유 계층 - 재사용 가능한 리소스
+    ├── config/
+    │   └── index.ts                      # API 설정 및 상수
+    ├── lib/                            # 유틸리티 함수
+    │   └── http/
+    │       └── index.ts                  # Axios 인스턴스 설정
+    └── ui/                             # 공용 UI 컴포넌트
+        ├── index.ts                      # UI barrel export
+        ├── Badge.tsx                     # 뱃지 컴포넌트
+        ├── Button.tsx                    # 버튼 컴포넌트
+        ├── Card.tsx                      # 카드 컴포넌트
+        ├── Container.tsx                 # 컨테이너 컴포넌트
+        └── Spinner.tsx                   # 로딩 스피너
+
+tests/
+└── e2e/                                # E2E 테스트
+    ├── products.spec.ts                  # 상품 리스트 페이지 테스트
+    └── product-detail.spec.ts            # 상품 상세 페이지 테스트
+```
 
 ## 2) 개발내용
 
