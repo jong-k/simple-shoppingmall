@@ -60,6 +60,7 @@ FSD(Feature-sliced design) 패턴을 적용하여 유지보수성과 확장성�
   - 카드 클릭 시 `/products/{id}`로 이동
   - 썸네일 이미지는 `loading="lazy"` 및 `decoding="async"` 적용하여 브라우저 수준 lazy loading 및 병렬적 DOM 렌더링
   - 리렌더링 방지: React.memo() 활용하여 추가 데이터 로드 시 기존 카드 리렌더링 방지
+  - 반응형 디자인 적용
 
 ### 상세 페이지 구현
 
@@ -71,6 +72,7 @@ FSD(Feature-sliced design) 패턴을 적용하여 유지보수성과 확장성�
 - 상세 UI: `entities/product/ui/ProductDetails.tsx`
   - thumbnail, title, price, tags 표시
   - `React.memo()` 활용하여 props 변경 없는 경우 리렌더링을 방지
+  - 반응형 디자인 적용
 - 초기값을 캐싱에서 빠르게 가져오기
   - `QueryClient.getQueriesData()`를 사용하여 상품 리스트 데이터에서 id에 해당하는 값 가져와 초기값으로 활용
   - 이후 백그라운드에서 페칭하여 최신값 렌더링
@@ -94,8 +96,7 @@ FSD(Feature-sliced design) 패턴을 적용하여 유지보수성과 확장성�
 ### 접근성/코드품질
 
 - `Spinner.tsx`에 `role="status"` 및 `aria-label` 지정하여 접근성 개선
-- ESLint/Prettier 구성으로 일관된 코드 스타일 유지
-  - import 정렬 및 Tailwind 유틸 우선 스타일링
+- ESLint, Prettier 구성으로 일관된 코드 스타일 유지
 - `tailwind-merge`로 tailwind class 충돌 해소
 
 ## 3) 빌드 및 실행방법
