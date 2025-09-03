@@ -1,14 +1,12 @@
 # Simple Shoppingmall
 
-> 작성자: 김종한
-
 ## 1) 개발환경
 
 ### 기술 스택
 
 - Node.js: 22.17.1
 - 패키지 매니저: pnpm 10.12.4
-- 기술 스택: React 19, TypeScript, Vite(SWC)
+- 코어: React 19, TypeScript, Vite(SWC)
 - 라우팅: React Router v7
 - 서버 상태 관리: TanStack Query(react-query v5)
 - 스타일링: Tailwind CSS v4
@@ -58,7 +56,7 @@ src/
 │       │   ├── types.ts                  # 상품 타입 정의
 │       │   └── queries.ts                # TanStack Query 훅
 │       └── ui/
-│           ├── index.ts                # 상품 엔티티 UI 
+│           ├── index.ts                # 상품 엔티티 UI
 │           ├── ProductCard.tsx           # 상품 카드 컴포넌트
 │           ├── ProductDetails.tsx        # 상품 상세 정보
 │           └── ProductThumbnail.tsx      # 상품 썸네일
