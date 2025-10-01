@@ -172,13 +172,11 @@ tests/
 - 미리보기: `pnpm preview`
 - 산출물: `dist/`
 
-## 4) 정적 페이지 배포
+## 4) 정적 페이지 배포 (현재는 배포 중단)
 
 - AWS S3 + CloudFront 활용
 - GitHub Actions 활용하여 CI/CD 설정
   - `.github/workflows/deploy.yml`
-
-https://d1th7w7l95v1jv.cloudfront.net
 
 ## (기타) E2E 테스트(Playwright)
 
